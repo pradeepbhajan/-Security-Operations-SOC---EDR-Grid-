@@ -1,0 +1,47 @@
+# Sentient Shield - Python Dependencies
+
+# Core Dependencies
+requests==2.31.0
+pyyaml==6.0.1
+python-dotenv==1.0.0
+
+# Wazuh API Integration
+wazuh-api==4.7.0
+
+# Data Processing
+pandas==2.1.4
+numpy==1.26.2
+
+# MITRE ATT&CK Framework
+mitreattack-python==3.0.4
+stix2==3.0.1
+
+# Logging and Monitoring
+loguru==0.7.2
+colorama==0.4.6
+
+# Network and Security
+paramiko==3.4.0
+cryptography==41.0.7
+
+# Elasticsearch Integration
+elasticsearch==8.11.1
+
+# Threat Intelligence
+pymisp==2.4.179
+
+# Testing and Simulation
+pytest==7.4.3
+pytest-cov==4.1.0
+
+# Automation
+schedule==1.2.0
+click==8.1.7
+
+# Reporting
+jinja2==3.1.2
+reportlab==4.0.7
+
+# API Development
+flask==3.0.0
+flask-cors==4.0.0

@@ -1,0 +1,160 @@
+# Wazuh Manager Configuration for Sentient Shield
+
+manager:
+  host: "0.0.0.0"
+  port: 1514
+  protocol: "tcp"
+  
+  # Connection settings
+  connection:
+    queue_size: 131072
+    
+  # Cluster configuration (for multi-node setup)
+  cluster:
+    name: "sentient-shield-cluster"
+    node_name: "master-node"
+    node_type: "master"
+    disabled: false
+
+# Global configuration
+global:
+  # Email alerts
+  email_notification: true
+  email_to: "soc@infotact.com"
+  smtp_server: "smtp.gmail.com"
+  email_from: "wazuh@infotact.com"
+  
+  # Log settings
+  logall: true
+  logall_json: true
+  
+  # Alert level threshold
+  email_alert_level: 10
+
+# Remote syslog
+remote:
+  - connection: "secure"
+    port: 514
+    protocol: "tcp"
+    allowed-ips:
+      - "192.168.1.0/24"
+      - "10.0.0.0/8"
+
+# File Integrity Monitoring
+syscheck:
+  frequency: 300
+  scan_on_start: true
+  
+  # Linux directories
+  directories:
+    - path: "/etc"
+      report_changes: true
+      realtime: true
+      check_all: true
+      
+    - path: "/usr/bin"
+      report_changes: true
+      realtime: true
+      
+    - path: "/usr/sbin"
+      report_changes: true
+      realtime: true
+      
+    - path: "/var/www"
+      report_changes: true
+      realtime: true
+      
+  # Windows directories
+  windows_directories:
+    - path: "C:\\Windows\\System32"
+      report_changes: true
+      realtime: true
+      
+    - path: "C:\\Program Files"
+      report_changes: true
+      
+    - path: "C:\\Windows\\SysWOW64"
+      report_changes: true
+
+# Rootcheck
+rootcheck:
+  frequency: 36000
+  disabled: false
+
+# Vulnerability Detector
+vulnerability_detector:
+  enabled: true
+  interval: "5m"
+  run_on_start: true
+  
+  providers:
+    - name: "canonical"
+      enabled: true
+      
+    - name: "debian"
+      enabled: true
+      
+    - name: "redhat"
+      enabled: true
+      
+    - name: "nvd"
+      enabled: true
+
+# Active Response
+active_response:
+  disabled: false
+  
+  # Firewall drop for SSH brute force
+  - command: "firewall-drop"
+    location: "local"
+    rules_id: 
+      - 5710  # SSH authentication failed
+      - 5712  # SSH brute force attempt
+    timeout: 3600
+    repeated_offenders: "30m,1h,3h"
+
+# Command definitions
+commands:
+  - name: "firewall-drop"
+    executable: "firewall-drop.sh"
+    expect: "srcip"
+    timeout_allowed: true
+    
+  - name: "disable-account"
+    executable: "disable-account.sh"
+    expect: "user"
+    
+  - name: "restart-service"
+    executable: "restart-service.sh"
+    expect: "service"
+
+# Integration with external tools
+integration:
+  - name: "slack"
+    hook_url: "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+    alert_level: 10
+    
+  - name: "virustotal"
+    api_key: "YOUR_VT_API_KEY"
+    
+  - name: "shuffle"
+    hook_url: "https://shuffler.io/api/v1/hooks/YOUR_HOOK"
+
+# Log analysis
+localfile:
+  - location: "/var/log/auth.log"
+    log_format: "syslog"
+    
+  - location: "/var/log/syslog"
+    log_format: "syslog"
+    
+  - location: "/var/log/apache2/access.log"
+    log_format: "apache"
+    
+  - location: "/var/log/apache2/error.log"
+    log_format: "apache"
+
+# MITRE ATT&CK Framework
+mitre:
+  enabled: true
+  auto_mapping: true

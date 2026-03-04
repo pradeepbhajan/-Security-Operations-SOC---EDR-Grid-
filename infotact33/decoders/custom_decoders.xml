@@ -1,0 +1,26 @@
+<!-- Custom Decoders for Sentient Shield -->
+
+<group name="local,syslog,">
+
+  <decoder name="custom-ssh-decoder">
+    <parent>sshd</parent>
+    <prematch>^Failed password for</prematch>
+    <regex offset="after_prematch">^ (\S+) from (\S+) port (\d+)</regex>
+    <order>user, srcip, srcport</order>
+  </decoder>
+
+  <decoder name="custom-apache-decoder">
+    <parent>apache-errorlog</parent>
+    <prematch>authentication failure</prematch>
+    <regex>user (\S+): authentication failure</regex>
+    <order>user</order>
+  </decoder>
+
+  <decoder name="custom-fim-decoder">
+    <parent>syscheck</parent>
+    <prematch>Integrity checksum changed</prematch>
+    <regex>File '(\S+)' (\w+)</regex>
+    <order>file, action</order>
+  </decoder>
+
+</group>

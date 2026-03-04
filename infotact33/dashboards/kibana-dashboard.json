@@ -1,0 +1,31 @@
+{
+  "title": "Sentient Shield - Security Overview",
+  "description": "Main security dashboard for EDR monitoring",
+  "panels": [
+    {
+      "title": "Alert Severity Distribution",
+      "type": "pie",
+      "query": "rule.level:*"
+    },
+    {
+      "title": "Top Attack Sources",
+      "type": "bar",
+      "query": "data.srcip:*"
+    },
+    {
+      "title": "MITRE ATT&CK Techniques",
+      "type": "table",
+      "query": "rule.mitre.id:*"
+    },
+    {
+      "title": "File Integrity Alerts",
+      "type": "line",
+      "query": "rule.groups:syscheck"
+    },
+    {
+      "title": "Active Response Actions",
+      "type": "metric",
+      "query": "rule.groups:active_response"
+    }
+  ]
+}

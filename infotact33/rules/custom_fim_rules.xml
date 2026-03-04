@@ -1,0 +1,111 @@
+<!-- Custom FIM Rules for Sentient Shield -->
+<!-- File Integrity Monitoring Detection Rules -->
+
+<group name="syscheck,fim,sentient_shield">
+
+  <!-- Critical System File Modified -->
+  <rule id="100001" level="12">
+    <if_sid>550</if_sid>
+    <field name="file">/etc/passwd|/etc/shadow|/etc/sudoers</field>
+    <description>Critical system file $(file) was modified - Potential privilege escalation attempt</description>
+    <mitre>
+      <id>T1078</id>
+      <id>T1548</id>
+    </mitre>
+  </rule>
+
+  <!-- Windows System32 Modification -->
+  <rule id="100002" level="12">
+    <if_sid>550</if_sid>
+    <field name="file">\\Windows\\System32</field>
+    <description>Windows System32 file $(file) was modified - Potential malware activity</description>
+    <mitre>
+      <id>T1055</id>
+      <id>T1574</id>
+    </mitre>
+  </rule>
+
+  <!-- Suspicious Binary Added to System Paths -->
+  <rule id="100003" level="10">
+    <if_sid>554</if_sid>
+    <field name="file">/usr/bin|/usr/sbin|/bin|/sbin</field>
+    <description>New binary added to system path: $(file) - Potential backdoor installation</description>
+    <mitre>
+      <id>T1543</id>
+      <id>T1136</id>
+    </mitre>
+  </rule>
+
+  <!-- Web Application File Modified -->
+  <rule id="100004" level="8">
+    <if_sid>550</if_sid>
+    <field name="file">/var/www|/usr/share/nginx</field>
+    <description>Web application file $(file) modified - Potential web shell deployment</description>
+    <mitre>
+      <id>T1505.003</id>
+    </mitre>
+  </rule>
+
+  <!-- SSH Configuration Modified -->
+  <rule id="100005" level="10">
+    <if_sid>550</if_sid>
+    <field name="file">/etc/ssh/sshd_config</field>
+    <description>SSH configuration file modified - Review changes immediately</description>
+    <mitre>
+      <id>T1098</id>
+      <id>T1563</id>
+    </mitre>
+  </rule>
+
+  <!-- Cron Job Modified -->
+  <rule id="100006" level="9">
+    <if_sid>550</if_sid>
+    <field name="file">/etc/cron|/var/spool/cron</field>
+    <description>Cron job file $(file) modified - Potential persistence mechanism</description>
+    <mitre>
+      <id>T1053.003</id>
+    </mitre>
+  </rule>
+
+  <!-- Windows Registry Critical Keys -->
+  <rule id="100007" level="11">
+    <if_sid>550</if_sid>
+    <field name="file">\\Windows\\System32\\config\\SAM|\\Windows\\System32\\config\\SYSTEM</field>
+    <description>Critical Windows registry hive $(file) accessed - Potential credential dumping</description>
+    <mitre>
+      <id>T1003.002</id>
+    </mitre>
+  </rule>
+
+  <!-- Startup Folder Modification -->
+  <rule id="100008" level="9">
+    <if_sid>554</if_sid>
+    <field name="file">\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup</field>
+    <description>File added to Windows startup folder - Potential persistence</description>
+    <mitre>
+      <id>T1547.001</id>
+    </mitre>
+  </rule>
+
+  <!-- Multiple FIM Alerts - Possible Ransomware -->
+  <rule id="100009" level="14" frequency="10" timeframe="60">
+    <if_matched_sid>550</if_matched_sid>
+    <description>Multiple file modifications detected in short time - Possible ransomware activity</description>
+    <mitre>
+      <id>T1486</id>
+      <id>T1490</id>
+    </mitre>
+  </rule>
+
+  <!-- File Deletion in Critical Directory -->
+  <rule id="100010" level="10">
+    <if_sid>553</if_sid>
+    <field name="file">/etc|\\Windows\\System32</field>
+    <description>Critical file $(file) deleted - Potential defense evasion or sabotage</description>
+    <mitre>
+      <id>T1070.004</id>
+      <id>T1485</id>
+    </mitre>
+  </rule>
+
+</group>
